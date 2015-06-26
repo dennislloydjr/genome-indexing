@@ -16,14 +16,8 @@
  * limitations under the License.
  */
 
-package bucket_sort;
+package genomeindexing;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-//import org.apache.hadoop.classification.InterfaceAudience;
-//import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileStatus;
@@ -36,10 +30,17 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
-import org.apache.hadoop.util.LineReader;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.input.LineRecordReader;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.util.LineReader;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+//import org.apache.hadoop.classification.InterfaceAudience;
+//import org.apache.hadoop.classification.InterfaceStability;
 
 /**
  * NLineInputFormat which splits N lines of input as one split.

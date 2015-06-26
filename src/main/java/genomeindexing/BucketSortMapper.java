@@ -18,62 +18,62 @@ import java.io.IOException;
  * Reads a file containing range of indices and outputs them.
  */
 public class BucketSortMapper
-	extends Mapper<Object, Text, IntWritable, NullWritable> implements Configurable {
+        extends Mapper<Object, Text, IntWritable, NullWritable> implements Configurable {
 
-	private Configuration conf;
+    private Configuration conf;
 
-	public void map(Object key, Text value, Context context)
-		throws IOException, InterruptedException {
-		String[] tokens = value.toString().split(","); 
-		Long startIndex = Long.parseLong(tokens[0]);
-		Long endIndex = Long.parseLong(tokens[1]);
-		for (long i = startIndex; i <= endIndex; ++i) {
-			context.write(new IntWritable((int)i), NullWritable.get());
-		}
-	}
-
-	@Override
-	public void cleanup(Context context)
-		throws IOException, InterruptedException {
-		BucketSortTotalOrderPartitioner.dnaString = null;
-
-	}
-	
-	@Override
-	public Configuration getConf() {
-		return conf;
-	}
-
-  // function that cleanes up tmp files from previous runs.
-  private void cleanupTempFiles() {
-    File tmpDir = new File("/tmp/");
-    String[] fileList = tmpDir.list(new FilenameFilter() {
-      public boolean accept(File dir, String name) {
-        return (name.endsWith("_filename"));
-      }
-    });
-    for (String filename : fileList) {
-      File tmpFile = new File("/tmp/", filename);
-      System.out.println(filename);
-      tmpFile.delete();
+    public void map(Object key, Text value, Context context)
+            throws IOException, InterruptedException {
+        String[] tokens = value.toString().split(",");
+        Long startIndex = Long.parseLong(tokens[0]);
+        Long endIndex = Long.parseLong(tokens[1]);
+        for (long i = startIndex; i <= endIndex; ++i) {
+            context.write(new IntWritable((int) i), NullWritable.get());
+        }
     }
-  }
 
-	@Override
-	public void setConf(Configuration conf) {
-		this.conf = conf;
-    cleanupTempFiles();
-		String dnaFileName = "dna_filename";
-    File file = new File(dnaFileName);
-    BufferedInputStream stream = null;
-		try {
-      stream = new BufferedInputStream(new FileInputStream(file));
-      DNAString dnaString = new DNAString(stream, file.length());
-			BucketSortTotalOrderPartitioner.dnaString = dnaString;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void cleanup(Context context)
+            throws IOException, InterruptedException {
+        BucketSortTotalOrderPartitioner.dnaString = null;
+
+    }
+
+    @Override
+    public Configuration getConf() {
+        return conf;
+    }
+
+    // function that cleanes up tmp files from previous runs.
+    private void cleanupTempFiles() {
+        File tmpDir = new File("/tmp/");
+        String[] fileList = tmpDir.list(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return (name.endsWith("_filename"));
+            }
+        });
+        for (String filename : fileList) {
+            File tmpFile = new File("/tmp/", filename);
+            System.out.println(filename);
+            tmpFile.delete();
+        }
+    }
+
+    @Override
+    public void setConf(Configuration conf) {
+        this.conf = conf;
+        cleanupTempFiles();
+        String dnaFileName = "dna_filename";
+        File file = new File(dnaFileName);
+        BufferedInputStream stream = null;
+        try {
+            stream = new BufferedInputStream(new FileInputStream(file));
+            DNAString dnaString = new DNAString(stream, file.length());
+            BucketSortTotalOrderPartitioner.dnaString = dnaString;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

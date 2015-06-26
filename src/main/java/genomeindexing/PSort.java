@@ -15,84 +15,89 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Reads prefix, index records and sorts them using a SortedSet.  
+ * Reads prefix, index records and sorts them using a SortedSet.
  */
 public class PSort
-extends Reducer<IntWritable, NullWritable, String, NullWritable> implements Configurable {
+        extends Reducer<IntWritable, NullWritable, String, NullWritable> implements Configurable {
 
-  private Configuration conf;
-  private String dna_filename;
-  private int partition;
-  private int numIndices = 0;
-  BufferedWriter ofs;
-  String suffixFilename;
-  String jobName;
+    private Configuration conf;
+    private String dna_filename;
+    private int partition;
+    private int numIndices = 0;
+    BufferedWriter ofs;
+    String suffixFilename;
+    String jobName;
 
-  enum ReducerTime {
-    PSORT_TIME
-  };
-
-  public native void do_sort(String dna_file,
-      String suffix_file,
-      String output_file,
-      int numIndices,
-      int partition);
-  /* Use static intializer */
-  static {
-    System.loadLibrary("psort");
-  }
-
-  public void reduce(IntWritable key, Iterable<NullWritable> values, Context context)
-    throws IOException, InterruptedException {
-      long longIndex = key.get() & 0xffffffffL;
-      ofs.write(Long.toString(longIndex) + "\n");
-      ++numIndices;
+    enum ReducerTime {
+        PSORT_TIME
     }
 
-  @Override
+    ;
+
+    public native void do_sort(String dna_file,
+                               String suffix_file,
+                               String output_file,
+                               int numIndices,
+                               int partition);
+
+    /* Use static intializer */
+    static {
+        System.loadLibrary("psort");
+    }
+
+    public void reduce(IntWritable key, Iterable<NullWritable> values, Context context)
+            throws IOException, InterruptedException {
+        long longIndex = key.get() & 0xffffffffL;
+        ofs.write(Long.toString(longIndex) + "\n");
+        ++numIndices;
+    }
+
+    @Override
     public void setup(Context context)
-    throws IOException, InterruptedException {
-      jobName = new String(context.getJobID().toString());
-      String partitionStr = conf.get("mapred.task.partition");
-      partition = Integer.parseInt(partitionStr);
-      suffixFilename = new String("/tmp/" + partition + "_" + jobName + "_suffix_filename"); 
-      try {
-        ofs = new BufferedWriter(new FileWriter(suffixFilename));
-      } catch (FileNotFoundException e) {
-        e.printStackTrace();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+            throws IOException, InterruptedException {
+        jobName = new String(context.getJobID().toString());
+        String partitionStr = conf.get("mapred.task.partition");
+        partition = Integer.parseInt(partitionStr);
+        suffixFilename = new String("/tmp/" + partition + "_" + jobName + "_suffix_filename");
+        try {
+            ofs = new BufferedWriter(new FileWriter(suffixFilename));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
-  @Override
+    @Override
     public void cleanup(Context context)
-    throws IOException, InterruptedException {
-      ofs.close();
-      if (numIndices == 0) return;
-      String outputFilename = "/tmp/" + partition + "_" + jobName + "_suffix_array_filename"; 
-      long start = System.currentTimeMillis();
-      this.do_sort(this.dna_filename, suffixFilename, outputFilename, numIndices, partition);
-      long elapsedTime = System.currentTimeMillis()-start;
-      context.getCounter(ReducerTime.PSORT_TIME).increment(elapsedTime);
-      String outputDir = conf.get("mapred.output.dir");
-      String hdfsOutputFilename = String.format("%s/suffix_array-%05d", outputDir, partition);
-      FileSystem.get(conf).copyFromLocalFile(false, true,
-          new Path(outputFilename),
-          new Path(hdfsOutputFilename));
-      File suffixFile = new File(suffixFilename);
-      suffixFile.delete();
+            throws IOException, InterruptedException {
+        ofs.close();
+        if (numIndices == 0) {
+            return;
+        }
+        String outputFilename = "/tmp/" + partition + "_" + jobName + "_suffix_array_filename";
+        long start = System.currentTimeMillis();
+        this.do_sort(this.dna_filename, suffixFilename, outputFilename, numIndices, partition);
+        long elapsedTime = System.currentTimeMillis() - start;
+        context.getCounter(ReducerTime.PSORT_TIME).increment(elapsedTime);
+        String outputDir = conf.get("mapred.output.dir");
+        String hdfsOutputFilename = String.format("%s/suffix_array-%05d", outputDir, partition);
+        FileSystem.get(conf).copyFromLocalFile(false, true,
+                new Path(outputFilename),
+                new Path(hdfsOutputFilename));
+        File suffixFile = new File(suffixFilename);
+        suffixFile.delete();
     }
 
-  @Override
+    @Override
     public Configuration getConf() {
-      return conf;
+        return conf;
     }
 
-  @Override
+    @Override
     public void setConf(Configuration conf) {
-      this.conf = conf;
-      dna_filename = "dna_filename";
+        this.conf = conf;
+        dna_filename = "dna_filename";
     }
 }

@@ -44,7 +44,7 @@ public class BucketSortMapper
         return conf;
     }
 
-    // function that cleanes up tmp files from previous runs.
+    // function that cleans up tmp files from previous runs.
     private void cleanupTempFiles() {
         File tmpDir = new File("/tmp/");
         String[] fileList = tmpDir.list(new FilenameFilter() {
@@ -71,8 +71,6 @@ public class BucketSortMapper
             DNAString dnaString = new DNAString(stream, file.length());
             BucketSortTotalOrderPartitioner.dnaString = dnaString;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }

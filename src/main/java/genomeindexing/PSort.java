@@ -40,7 +40,7 @@ public class PSort
                                int numIndices,
                                int partition);
 
-    /* Use static intializer */
+    /* Use static initializer */
     static {
         System.loadLibrary("psort");
     }

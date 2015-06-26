@@ -39,12 +39,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-//import org.apache.hadoop.classification.InterfaceAudience;
-//import org.apache.hadoop.classification.InterfaceStability;
-
-//import org.apache.hadoop.classification.InterfaceAudience;
-//import org.apache.hadoop.classification.InterfaceStability;
-
 /**
  * NLineInputFormat which splits N lines of input as one split.
  *
@@ -63,8 +57,6 @@ import java.util.List;
  * i.e. (k,v) is (LongWritable, Text).
  * The location hints will span the whole mapred cluster.
  */
-//@InterfaceAudience.Public
-//@InterfaceStability.Stable
 public class NLineInputFormat extends FileInputFormat<LongWritable, Text> {
     public static final String LINES_PER_MAP =
             "mapreduce.input.lineinputformat.linespermap";

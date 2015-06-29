@@ -10,7 +10,6 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -61,8 +60,6 @@ public class PSort
         suffixFilename = new String("/tmp/" + partition + "_" + jobName + "_suffix_filename");
         try {
             ofs = new BufferedWriter(new FileWriter(suffixFilename));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

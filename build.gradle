@@ -1,10 +1,21 @@
 apply plugin: 'java'
+apply plugin: 'cpp'
 
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-  compile group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.7.0'
-  compile group: 'org.apache.hadoop', name: 'hadoop-mapreduce-client-common', version: '2.7.0'
+    compile group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.7.0'
+    compile group: 'org.apache.hadoop', name: 'hadoop-mapreduce-client-common', version: '2.7.0'
+}
+
+model {
+    toolChains {
+        gcc(Gcc)
+    }
+
+    components {
+        sampler(NativeExecutableSpec)
+    }
 }

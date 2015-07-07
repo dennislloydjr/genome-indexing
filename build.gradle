@@ -11,10 +11,6 @@ dependencies {
 }
 
 model {
-    toolChains {
-        gcc(Gcc)
-    }
-
     components {
         sampler(NativeExecutableSpec)
     }

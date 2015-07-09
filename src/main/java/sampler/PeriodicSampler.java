@@ -13,11 +13,11 @@ import java.util.Vector;
 public class PeriodicSampler {
     public static final Logger LOGGER = LoggerFactory.getLogger(PeriodicSampler.class);
 
-    public <T extends Comparable<? super T>> List<T> sample(List<T> elements, int numberOfSamples) {
+    public <T extends Comparable<? super T>> List<T> sample(List<? extends T> elements, int numberOfSamples) {
         List<T> samples = new Vector<>(numberOfSamples);
         Collections.sort(elements);
 
-        if(numberOfSamples > 0) {
+        if (numberOfSamples > 0) {
             int periodicIncrement = elements.size() / numberOfSamples;
 
             LOGGER.debug(String.format("Retrieving %d samples from list of size %d; period increment is %d.",

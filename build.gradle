@@ -26,3 +26,8 @@ tasks.withType(Test) {
         exceptionFormat "full"
     }
 }
+
+task copyToLib(type: Copy) {
+    into "build/libs"
+    from configurations.runtime
+}

@@ -6,22 +6,17 @@ import java.util.List;
 
 public class ListWriter {
     private static final String NEW_LINE = System.getProperty("line.separator");
-    private Writer output;
 
-    public ListWriter(Writer output) {
-        this.output = output;
-    }
-
-    public void write(List list) {
+    public void write(List list, Writer output) {
         try {
-            for(Object element : list) {
+            for (Object element : list) {
                 output.write(element.toString());
                 output.write(NEW_LINE);
             }
 
             output.flush();
         } catch (IOException ioe) {
-            throw new SamplerException(ioe);
+            throw new SamplerException("An exception occurred while writing the output.", ioe);
         }
     }
 }

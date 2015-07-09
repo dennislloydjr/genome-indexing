@@ -3,7 +3,6 @@ package sampler;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -13,7 +12,7 @@ public class SubSequenceCollectorTest {
     public void noResultsReturnedFromEmptySequence() {
         Sequence input = new Sequence("");
         SubSequenceCollector collector = new SubSequenceCollector(1, 1, 1);
-        Collection<Sequence> results = collector.collect(input);
+        List<Sequence> results = collector.collect(input);
         assertEquals(0, results.size());
     }
 
@@ -59,7 +58,7 @@ public class SubSequenceCollectorTest {
     }
 
     @Test
-    public void subSequencesHaveMinUniqueChars() {
+    public void subSequencesHaveMinUniqueCharsAndContinuesWithRunOfSameChars() {
         Sequence input = new Sequence("111222333444555666777888999000");
         int stepSize = 5;
         int minLength = 2;
@@ -67,7 +66,7 @@ public class SubSequenceCollectorTest {
 
         SubSequenceCollector collector = new SubSequenceCollector(stepSize, minLength, minUniqueChars);
         List<Sequence> results = collector.collect(input);
-        List<Sequence> expected = Arrays.asList(new Sequence("223"), new Sequence("4445"), new Sequence("56"), new Sequence("778"), new Sequence("9990"));
+        List<Sequence> expected = Arrays.asList(new Sequence("22333"), new Sequence("444555"), new Sequence("5666"), new Sequence("77888"), new Sequence("999000"));
         assertEquals(expected, results);
     }
 }

@@ -2,7 +2,7 @@ package sampler;
 
 import org.apache.commons.lang.StringUtils;
 
-public class Sequence {
+public class Sequence implements Comparable<Sequence> {
     private final String sequence;
 
     public Sequence(final String sequence) {
@@ -15,8 +15,8 @@ public class Sequence {
 
     @Override
     public boolean equals(Object o) {
-        if(o instanceof Sequence) {
-            final Sequence rhs = (Sequence)o;
+        if (o instanceof Sequence) {
+            final Sequence rhs = (Sequence) o;
             return sequence.equals(rhs.sequence);
         } else {
             return false;
@@ -26,5 +26,10 @@ public class Sequence {
     @Override
     public String toString() {
         return getSequence();
+    }
+
+    @Override
+    public int compareTo(Sequence sequence) {
+        return getSequence().compareTo(sequence.getSequence());
     }
 }

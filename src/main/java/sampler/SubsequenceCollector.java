@@ -12,11 +12,19 @@ import java.util.Vector;
  * unique characters.
  */
 public class SubSequenceCollector {
+    public static final int DEFAULT_STEP_SIZE = 1000;
+    public static final int DEFAULT_MIN_CHARS = 15;
+    public static final int DEFAULT_MIN_UNIQUE_CHARS = 2;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SubSequenceCollector.class);
 
     private final int stepSize;
     private final int minimumCharacters;
     private final int minimumUniqueCharacters;
+
+    public SubSequenceCollector() {
+        this(DEFAULT_STEP_SIZE, DEFAULT_MIN_CHARS, DEFAULT_MIN_UNIQUE_CHARS);
+    }
 
     public SubSequenceCollector(int stepSize, int minimumCharacters, int minimumUniqueCharacters) {
         this.stepSize = stepSize;
@@ -26,7 +34,7 @@ public class SubSequenceCollector {
 
     public List<Sequence> collect(Sequence input) {
         String sequence = input.getSequence();
-        Vector<Sequence> results = new Vector<>(0);
+        List<Sequence> results = new Vector<>();
 
         int sequenceSize = sequence.length();
         int initialPosition = Math.max(1, Math.min(sequenceSize, stepSize)) - 1;
@@ -37,28 +45,36 @@ public class SubSequenceCollector {
         LOGGER.debug(String.format("Getting sub-sequences for sequence of length %d, step size %d, min chars %d, min unique chars %d", sequence.length(), stepSize, 0, 0));
 
         int position = initialPosition;
-        while(position < lastPosition) {
+        while (position < lastPosition) {
             int subSequencePosition = position;
             int uniqueCharCount = 0;
             int charCount = 0;
             char previousChar = '\0';
 
             boolean buildingSubSequence = true;
-            while(buildingSubSequence && subSequencePosition < sequenceSize) {
+            while (buildingSubSequence && subSequencePosition < sequenceSize) {
                 char currentChar = sequence.charAt(subSequencePosition);
                 subSequenceBuilder.append(currentChar);
 
                 charCount++;
-                subSequencePosition++;
-                if(previousChar != currentChar) {
+                if (previousChar != currentChar) {
                     uniqueCharCount++;
                 }
-                previousChar = currentChar;
 
+                char nextChar = (subSequencePosition == sequenceSize - 1) ? '\0' : sequence.charAt(subSequencePosition + 1);
+                while(nextChar == currentChar) {
+                    subSequenceBuilder.append(currentChar);
+                    subSequencePosition++;
+                    nextChar = (subSequencePosition == sequenceSize - 1) ? '\0' : sequence.charAt(subSequencePosition + 1);
+                    charCount++;
+                }
+
+                subSequencePosition++;
+                previousChar = currentChar;
                 buildingSubSequence = (uniqueCharCount < minimumUniqueCharacters || charCount < minimumCharacters);
             }
 
-            if(!buildingSubSequence) {
+            if (!buildingSubSequence) {
                 results.add(new Sequence(subSequenceBuilder.toString()));
                 subSequenceBuilder.setLength(0);
             }

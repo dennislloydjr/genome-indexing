@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,7 +28,8 @@ public class Sampler {
     public void createPartitions(Reader inputReader, Writer outputWriter, int numPartitions) {
         Sequence sequence = sequenceReader.read(inputReader);
         List<Sequence> samples = subSequenceCollector.collect(sequence);
-        List<Sequence> partitions = periodicSampler.sample(samples, numPartitions);
+        Collections.sort(samples);
+        List<Sequence> partitions = periodicSampler.sample(samples, numPartitions - 1);
         listWriter.write(partitions, outputWriter);
     }
 

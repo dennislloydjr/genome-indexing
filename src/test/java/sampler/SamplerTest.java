@@ -43,7 +43,7 @@ public class SamplerTest {
 
         when(sequenceReader.read(inputReader)).thenReturn(inputSequence);
         when(subSequenceCollector.collect(inputSequence)).thenReturn(sequenceList);
-        when(periodicSampler.sample(sequenceList, numPartitions)).thenReturn(partitions);
+        when(periodicSampler.sample(sequenceList, numPartitions - 1)).thenReturn(partitions);
 
         sampler.createPartitions(inputReader, outputWriter, numPartitions);
 

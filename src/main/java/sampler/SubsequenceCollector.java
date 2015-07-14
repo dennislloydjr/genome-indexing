@@ -37,7 +37,7 @@ public class SubSequenceCollector {
         List<Sequence> results = new Vector<>();
 
         int sequenceSize = sequence.length();
-        int initialPosition = Math.max(1, Math.min(sequenceSize, stepSize)) - 1;
+        int initialPosition = Math.max(0, Math.min(sequenceSize - 1, stepSize));
         int lastPosition = 1 + sequence.length() - minimumCharacters;
 
         StringBuilder subSequenceBuilder = new StringBuilder();
@@ -45,7 +45,7 @@ public class SubSequenceCollector {
         LOGGER.debug(String.format("Getting sub-sequences for sequence of length %d, step size %d, min chars %d, min unique chars %d", sequence.length(), stepSize, 0, 0));
 
         int position = initialPosition;
-        while (position < lastPosition) {
+        while (position <= lastPosition) {
             int subSequencePosition = position;
             int uniqueCharCount = 0;
             int charCount = 0;
@@ -74,10 +74,8 @@ public class SubSequenceCollector {
                 buildingSubSequence = (uniqueCharCount < minimumUniqueCharacters || charCount < minimumCharacters);
             }
 
-            if (!buildingSubSequence) {
-                results.add(new Sequence(subSequenceBuilder.toString()));
-                subSequenceBuilder.setLength(0);
-            }
+            results.add(new Sequence(subSequenceBuilder.toString()));
+            subSequenceBuilder.setLength(0);
 
             position += stepSize;
         }

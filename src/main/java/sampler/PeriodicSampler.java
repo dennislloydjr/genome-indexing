@@ -18,13 +18,16 @@ public class PeriodicSampler {
         Collections.sort(elements);
 
         if (numberOfSamples > 0) {
-            int periodicIncrement = elements.size() / numberOfSamples;
+            double periodicIncrement = ((double)elements.size()) / (numberOfSamples + 1);
+            double startPosition = periodicIncrement;
+            int endPosition = elements.size() - 1;
 
-            LOGGER.debug(String.format("Retrieving %d samples from list of size %d; period increment is %d.",
+            LOGGER.debug(String.format("Retrieving %d samples from list of size %d; period increment is %.2f.",
                     numberOfSamples, elements.size(), periodicIncrement));
 
-            for (int sampleIndex = periodicIncrement; sampleIndex <= elements.size(); sampleIndex += periodicIncrement) {
-                samples.add(elements.get(sampleIndex - 1));
+            for (double sampleIndex = startPosition; sampleIndex <= endPosition; sampleIndex += periodicIncrement) {
+                int index = (int)Math.ceil(sampleIndex - 1);
+                samples.add(elements.get(index));
             }
         } else {
             LOGGER.debug("Attempting to retrieve 0 samples from list");

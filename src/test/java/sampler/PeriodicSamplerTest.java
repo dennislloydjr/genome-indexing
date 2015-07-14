@@ -38,17 +38,17 @@ public class PeriodicSamplerTest {
         inputList.add("1");
 
         List<String> result = sampler.sample(inputList, 1);
-        assertEquals(1, result.size());
-        assertEquals("1", result.get(0));
+        assertEquals(0, result.size());
     }
 
     @Test
-    public void returnsAllSamplesWhenAllSamplesRequested() {
+    public void returnsAllButLastSampleWhenAllSamplesRequested() {
         PeriodicSampler sampler = new PeriodicSampler();
         List<String> inputList = Arrays.asList("1", "2", "3", "4", "5");
 
-        List<String> result = sampler.sample(inputList, 5);
-        assertEquals(inputList, result);
+        List<String> result = sampler.sample(inputList, 4);
+        List<String> expected = Arrays.asList("1", "2", "3", "4");
+        assertEquals(expected, result);
     }
 
     @Test

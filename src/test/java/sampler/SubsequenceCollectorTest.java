@@ -9,11 +9,12 @@ import static org.junit.Assert.assertEquals;
 
 public class SubSequenceCollectorTest {
     @Test
-    public void noResultsReturnedFromEmptySequence() {
+    public void emptyReturnedFromEmptySequence() {
         Sequence input = new Sequence("");
         SubSequenceCollector collector = new SubSequenceCollector(1, 1, 1);
         List<Sequence> results = collector.collect(input);
-        assertEquals(0, results.size());
+        List<Sequence> expected = Arrays.asList(new Sequence(""));
+        assertEquals(expected, results);
     }
 
     @Test
@@ -31,7 +32,7 @@ public class SubSequenceCollectorTest {
         int stepSize = 3;
         SubSequenceCollector collector = new SubSequenceCollector(stepSize, 1, 1);
         List<Sequence> results = collector.collect(input);
-        List<Sequence> expected = Arrays.asList(new Sequence("3"), new Sequence("6"), new Sequence("9"));
+        List<Sequence> expected = Arrays.asList(new Sequence("4"), new Sequence("7"), new Sequence("0"));
         assertEquals(expected, results);
     }
 
@@ -42,7 +43,7 @@ public class SubSequenceCollectorTest {
         int minLength = 2;
         SubSequenceCollector collector = new SubSequenceCollector(stepSize, minLength, 1);
         List<Sequence> results = collector.collect(input);
-        List<Sequence> expected = Arrays.asList(new Sequence("34"), new Sequence("67"), new Sequence("90"));
+        List<Sequence> expected = Arrays.asList(new Sequence("45"), new Sequence("78"), new Sequence("0"));
         assertEquals(expected, results);
     }
 
@@ -53,7 +54,7 @@ public class SubSequenceCollectorTest {
         int minLength = 2;
         SubSequenceCollector collector = new SubSequenceCollector(stepSize, minLength, 1);
         List<Sequence> results = collector.collect(input);
-        List<Sequence> expected = Arrays.asList(new Sequence("34"), new Sequence("67"));
+        List<Sequence> expected = Arrays.asList(new Sequence("45"), new Sequence("78"));
         assertEquals(expected, results);
     }
 
@@ -66,7 +67,7 @@ public class SubSequenceCollectorTest {
 
         SubSequenceCollector collector = new SubSequenceCollector(stepSize, minLength, minUniqueChars);
         List<Sequence> results = collector.collect(input);
-        List<Sequence> expected = Arrays.asList(new Sequence("22333"), new Sequence("444555"), new Sequence("5666"), new Sequence("77888"), new Sequence("999000"));
+        List<Sequence> expected = Arrays.asList(new Sequence("2333"), new Sequence("44555"), new Sequence("666777"), new Sequence("7888"), new Sequence("99000"));
         assertEquals(expected, results);
     }
 }

@@ -54,7 +54,6 @@ public class ListWriterTest {
         doThrow(new IOException(exceptionMessage)).when(mockWriter).flush();
 
         thrown.expect(SamplerException.class);
-        thrown.expectCause(instanceOf(IOException.class));
         listWriter.write(new Vector<String>(0), mockWriter);
     }
 

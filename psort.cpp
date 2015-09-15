@@ -1,3 +1,5 @@
+#include <cstdint>
+#include <limits>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -319,7 +321,7 @@ void call_sort(const std::string &dna_file, const std::string &suffix_file,
       max_idx = max(max_idx, idx);
     }
     ifs.close();
-    if (max_idx > INT_MAX) {
+    if (max_idx > std::numeric_limits<std::int32_t>::max()) {
       qsort(indices, sz, sizeof(unsigned int), index_compare);
     }
     unsigned int prev_idx = 0, prev_repeat = 0;
